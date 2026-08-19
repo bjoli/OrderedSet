@@ -1,0 +1,14 @@
+# Build directories
+[Bb]in/
+[Oo]bj/
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+*.log
+
+# Visual Studio
+.vs/
+*.user
+
+# .NET
+*.suo
