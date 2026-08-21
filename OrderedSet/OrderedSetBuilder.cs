@@ -26,6 +26,18 @@ public sealed class OrderedSetBuilder<T>
         _items.Add(key);
     }
 
+    public void AddRange(IEnumerable<T> range)
+    {
+        _items.AddRange(range);
+    }
+
+    /// <summary>
+    ///     How many elements have been appended. Duplicates are still counted: they are
+    ///     compacted by <see cref="Build" />, so this is the number of appends rather than the
+    ///     size of the set being built.
+    /// </summary>
+    public int Count => _items.Count;
+
     public OrderedSet<T> Build()
     {
         if (_items.Count == 0)
