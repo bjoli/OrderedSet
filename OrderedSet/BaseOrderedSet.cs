@@ -14,7 +14,7 @@ public abstract class BaseOrderedSet<T> : IEnumerable<T>
     protected BaseOrderedSet(Node<T> root, IComparer<T> comparer, int count)
     {
         Root = root ?? throw new ArgumentNullException(nameof(root));
-        Comparer = comparer ?? Comparer<T>.Default;
+        Comparer = comparer ?? DefaultOrder.For<T>();
         Count = count;
     }
 
@@ -37,13 +37,13 @@ public abstract class BaseOrderedSet<T> : IEnumerable<T>
     {
         // Start with an empty leaf owned by None so the first write triggers CoW.
         var emptyRoot = new LeafNode<T>(OwnerId.None);
-        return new OrderedSet<T>(emptyRoot, comparer ?? Comparer<T>.Default, 0);
+        return new OrderedSet<T>(emptyRoot, comparer ?? DefaultOrder.For<T>(), 0);
     }
 
     public static TransientOrderedSet<T> CreateTransient(IComparer<T>? comparer = null)
     {
         var emptyRoot = new LeafNode<T>(OwnerId.None);
-        return new TransientOrderedSet<T>(emptyRoot, comparer ?? Comparer<T>.Default, 0);
+        return new TransientOrderedSet<T>(emptyRoot, comparer ?? DefaultOrder.For<T>(), 0);
     }
     
     

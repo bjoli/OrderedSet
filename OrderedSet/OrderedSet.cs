@@ -78,7 +78,7 @@ public sealed class OrderedSet<T> : BaseOrderedSet<T>, IEquatable<OrderedSet<T>>
         // instead of modifying it in place.
         var emptyRoot = new LeafNode<T>(default(OwnerId));
     
-        return new OrderedSet<T>(emptyRoot, comparer ?? Comparer<T>.Default, 0);
+        return new OrderedSet<T>(emptyRoot, comparer ?? DefaultOrder.For<T>(), 0);
     }
 
     public OrderedSet<T> Remove(T key)

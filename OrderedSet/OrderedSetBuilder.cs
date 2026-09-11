@@ -12,13 +12,13 @@ public sealed class OrderedSetBuilder<T>
     public OrderedSetBuilder(IComparer<T>? comparer = null)
     {
         _items = new List<T>();
-        _comparer = comparer ?? Comparer<T>.Default;
+        _comparer = comparer ?? DefaultOrder.For<T>();
     }
 
     public OrderedSetBuilder(int capacity, IComparer<T>? comparer = null)
     {
         _items = new List<T>(capacity);
-        _comparer = comparer ?? Comparer<T>.Default;
+        _comparer = comparer ?? DefaultOrder.For<T>();
     }
 
     public void Add(T key)
