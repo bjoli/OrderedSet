@@ -8,8 +8,8 @@ namespace OrderedSet;
 ///
 ///     Every operation takes the set explicitly, and the higher-order ones take the function
 ///     first and the set last — the argument order a curried call site wants, and the one
-///     <c>SetModule</c> already uses. Folds take the accumulator first, as a left fold does
-///     everywhere else in this codebase.
+///     <c>SetModule</c> already uses. A fold's callback takes the element first and the
+///     accumulator last, as it does everywhere else in this codebase.
 /// </summary>
 public static class OrderedSetModule
 {
@@ -224,14 +224,14 @@ public static class OrderedSetModule
 
     // orderedset-fold: folder state set
     public static TState Fold<T, TState>(
-        Func<TState, T, TState> folder,
+        Func<T, TState, TState> folder,
         TState state,
         OrderedSet<T> set)
     {
         var currentState = state;
         foreach (var item in set)
         {
-            currentState = folder(currentState, item);
+            currentState = folder(item, currentState);
         }
         return currentState;
     }

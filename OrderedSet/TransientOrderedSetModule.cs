@@ -182,14 +182,14 @@ public static class TransientOrderedSetModule
 
     // transientorderedset-fold: folder state set
     public static TState Fold<T, TState>(
-        Func<TState, T, TState> folder,
+        Func<T, TState, TState> folder,
         TState state,
         TransientOrderedSet<T> set)
     {
         var currentState = state;
         foreach (var item in set)
         {
-            currentState = folder(currentState, item);
+            currentState = folder(item, currentState);
         }
         return currentState;
     }
