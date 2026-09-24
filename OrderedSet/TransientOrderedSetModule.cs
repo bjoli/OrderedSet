@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 
@@ -69,29 +70,17 @@ public static class TransientOrderedSetModule
         throw new KeyNotFoundException($"Key '{key}' not found in the set.");
     }
 
-    public static (bool found, T key) TryGetMin<T>(TransientOrderedSet<T> set)
-    {
-        var found = set.TryGetMin(out var key);
-        return (found, key);
-    }
+    public static bool TryGetMin<T>(TransientOrderedSet<T> set, [MaybeNullWhen(false)] out T key) =>
+        set.TryGetMin(out key);
 
-    public static (bool found, T key) TryGetMax<T>(TransientOrderedSet<T> set)
-    {
-        var found = set.TryGetMax(out var key);
-        return (found, key);
-    }
+    public static bool TryGetMax<T>(TransientOrderedSet<T> set, [MaybeNullWhen(false)] out T key) =>
+        set.TryGetMax(out key);
 
-    public static (bool found, T key) TryGetSuccessor<T>(TransientOrderedSet<T> set, T key)
-    {
-        var found = set.TryGetSuccessor(key, out var next);
-        return (found, next);
-    }
+    public static bool TryGetSuccessor<T>(TransientOrderedSet<T> set, T key, [MaybeNullWhen(false)] out T next) =>
+        set.TryGetSuccessor(key, out next);
 
-    public static (bool found, T key) TryGetPredecessor<T>(TransientOrderedSet<T> set, T key)
-    {
-        var found = set.TryGetPredecessor(key, out var previous);
-        return (found, previous);
-    }
+    public static bool TryGetPredecessor<T>(TransientOrderedSet<T> set, T key, [MaybeNullWhen(false)] out T previous) =>
+        set.TryGetPredecessor(key, out previous);
 
     public static IEnumerable<T> Range<T>(TransientOrderedSet<T> set, T min, T max) => set.Range(min, max);
 
@@ -219,17 +208,19 @@ public static class TransientOrderedSetModule
         return !Iter<T>(k => !predicate(k), set);
     }
 
-    public static (bool found, T key) TryFindKey<T>(Func<T, bool> predicate, TransientOrderedSet<T> set)
+    public static bool TryFindKey<T>(Func<T, bool> predicate, TransientOrderedSet<T> set, [MaybeNullWhen(false)] out T key)
     {
         foreach (var item in set)
         {
             if (predicate(item))
             {
-                return (true, item);
+                key = item;
+                return true;
             }
         }
 
-        return (false, default!);
+        key = default;
+        return false;
     }
 
     /// <summary>

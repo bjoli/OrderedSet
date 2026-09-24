@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 
@@ -147,38 +148,25 @@ public static class OrderedSetModule
     // Navigation — what the ordering buys over a hashed set
     // ---------------------------------------------------------
 
-    // A pair rather than an `out` parameter, which is the convention every
-    // partial answer in this interface follows: an `out` is a C# idiom and
-    // nothing else can call it, while a tuple is a value in any language. The
-    // empty set has no smallest element, and that is an answer.
+    // A partial answer is `bool TryXyz(..., out ...)`, the out marked
+    // `[MaybeNullWhen(false)]`: the empty set has no smallest element, and that
+    // is an answer. Bjolang imports these with `(out T)` and gets an `Option`.
 
-    public static (bool found, T key) TryGetMin<T>(OrderedSet<T> set)
-    {
-        var found = set.TryGetMin(out var key);
-        return (found, key);
-    }
+    public static bool TryGetMin<T>(OrderedSet<T> set, [MaybeNullWhen(false)] out T key) =>
+        set.TryGetMin(out key);
 
-    public static (bool found, T key) TryGetMax<T>(OrderedSet<T> set)
-    {
-        var found = set.TryGetMax(out var key);
-        return (found, key);
-    }
+    public static bool TryGetMax<T>(OrderedSet<T> set, [MaybeNullWhen(false)] out T key) =>
+        set.TryGetMax(out key);
 
     /// <summary>
     ///     The smallest element greater than <paramref name="key" />, which need not itself be in
     ///     the set.
     /// </summary>
-    public static (bool found, T key) TryGetSuccessor<T>(OrderedSet<T> set, T key)
-    {
-        var found = set.TryGetSuccessor(key, out var next);
-        return (found, next);
-    }
+    public static bool TryGetSuccessor<T>(OrderedSet<T> set, T key, [MaybeNullWhen(false)] out T next) =>
+        set.TryGetSuccessor(key, out next);
 
-    public static (bool found, T key) TryGetPredecessor<T>(OrderedSet<T> set, T key)
-    {
-        var found = set.TryGetPredecessor(key, out var previous);
-        return (found, previous);
-    }
+    public static bool TryGetPredecessor<T>(OrderedSet<T> set, T key, [MaybeNullWhen(false)] out T previous) =>
+        set.TryGetPredecessor(key, out previous);
 
     /// <summary>The elements from <paramref name="min" /> to <paramref name="max" />, inclusive.</summary>
     public static IEnumerable<T> Range<T>(OrderedSet<T> set, T min, T max) => set.Range(min, max);
@@ -268,17 +256,19 @@ public static class OrderedSetModule
     /// <summary>
     ///     The first element in order satisfying <paramref name="predicate" />, if there is one.
     /// </summary>
-    public static (bool found, T key) TryFindKey<T>(Func<T, bool> predicate, OrderedSet<T> set)
+    public static bool TryFindKey<T>(Func<T, bool> predicate, OrderedSet<T> set, [MaybeNullWhen(false)] out T key)
     {
         foreach (var item in set)
         {
             if (predicate(item))
             {
-                return (true, item);
+                key = item;
+                return true;
             }
         }
 
-        return (false, default!);
+        key = default;
+        return false;
     }
 
     // ---------------------------------------------------------
