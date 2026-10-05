@@ -18,6 +18,9 @@ public static class OrderedSetModule
     // Construction
     // ---------------------------------------------------------
 
+    /// <summary>What the set orders its elements by.</summary>
+    public static IComparer<T> Comparer<T>(OrderedSet<T> set) => set.Comparer;
+
     // orderedset-empty
     public static OrderedSet<T> Empty<T>(IComparer<T>? comparer = null)
     {
