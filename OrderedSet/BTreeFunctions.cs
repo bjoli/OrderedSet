@@ -164,6 +164,8 @@ namespace OrderedSet
         // Internal Helpers: Search
         // ---------------------------------------------------------
 
+        // The vector scans order NaN below every other key, as the comparer does, but cannot
+        // find NaN itself: no comparison with NaN is true. A NaN key goes through the comparer.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int FindIndex<T>(LeafNode<T> node, T key, IComparer<T> comparer)
         {
@@ -221,7 +223,7 @@ namespace OrderedSet
                 ushort intKey = Unsafe.As<T, ushort>(ref key);
                 return Scanners.FindFirstGreaterOrEqualInt(intKeys, intKey);
             }
-            if (typeof(T) == typeof(float))
+            if (typeof(T) == typeof(float) && !float.IsNaN(Unsafe.As<T, float>(ref key)))
             {
                 Span<T> keys = node.GetKeys();
                 ref T firstKeyRef = ref MemoryMarshal.GetReference(keys);
@@ -230,7 +232,7 @@ namespace OrderedSet
                 float intKey = Unsafe.As<T, float>(ref key);
                 return Scanners.FindFirstGreaterOrEqualFloat(intKeys, intKey);
             }
-            if (typeof(T) == typeof(double))
+            if (typeof(T) == typeof(double) && !double.IsNaN(Unsafe.As<T, double>(ref key)))
             {
                 Span<T> keys = node.GetKeys();
                 ref T firstKeyRef = ref MemoryMarshal.GetReference(keys);
@@ -300,7 +302,7 @@ namespace OrderedSet
                 ushort intKey = Unsafe.As<T, ushort>(ref key);
                 return Scanners.FindFirstGreaterInt(intKeys, intKey);
             }
-            if (typeof(T) == typeof(float))
+            if (typeof(T) == typeof(float) && !float.IsNaN(Unsafe.As<T, float>(ref key)))
             {
                 Span<T> keys = node.GetKeys();
                 ref T firstKeyRef = ref MemoryMarshal.GetReference(keys);
@@ -309,7 +311,7 @@ namespace OrderedSet
                 float intKey = Unsafe.As<T, float>(ref key);
                 return Scanners.FindFirstGreaterFloat(intKeys, intKey);
             }
-            if (typeof(T) == typeof(double))
+            if (typeof(T) == typeof(double) && !double.IsNaN(Unsafe.As<T, double>(ref key)))
             {
                 Span<T> keys = node.GetKeys();
                 ref T firstKeyRef = ref MemoryMarshal.GetReference(keys);
