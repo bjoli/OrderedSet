@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace OrderedSet;
 
@@ -278,34 +279,18 @@ public static class OrderedSetModule
     // Walking
     // ---------------------------------------------------------
 
-    public static OrderedSetCursor<T> Cursor<T>(OrderedSet<T> set) => new OrderedSetCursor<T>(set);
+    /// <summary>The cursor on the first element of the set, or a done cursor.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static OrderedSetCursor<T> Cursor<T>(OrderedSet<T> set) => OrderedSetCursor<T>.Start(set.Root);
 
-    /// <summary>
-    ///     Advances the cursor, and answers whether it ran off the end.
-    ///
-    ///     The advance happens here rather than in a step of its own: a walk asks "is there
-    ///     more?" exactly once per element, so folding the two together is what lets the whole
-    ///     traversal allocate nothing after the cursor itself.
-    /// </summary>
-    public static bool CursorDone<T>(OrderedSetCursor<T> cursor) => !cursor.Enumerator.MoveNext();
+    /// <summary>True when the cursor is past the last element. Does not move the cursor.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool CursorDone<T>(OrderedSetCursor<T> cursor) => cursor.Done;
 
-    public static T CursorCurrent<T>(OrderedSetCursor<T> cursor) => cursor.Enumerator.Current;
-}
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T CursorCurrent<T>(OrderedSetCursor<T> cursor) => cursor.Current;
 
-/// <summary>
-///     A position in a walk of an <see cref="OrderedSet{T}" />, in order.
-///
-///     <see cref="BTreeEnumerator{T}" /> is a struct, which is what keeps a <c>foreach</c>
-///     allocation-free — and exactly what makes it useless to a caller that has to *hold* the
-///     position, since every copy advances independently. This is that struct in a heap cell:
-///     one allocation for the walk, none per element.
-/// </summary>
-public sealed class OrderedSetCursor<T>
-{
-    public BTreeEnumerator<T> Enumerator;
-
-    public OrderedSetCursor(OrderedSet<T> set)
-    {
-        Enumerator = set.GetEnumerator();
-    }
+    /// <summary>The cursor on the next element. The cursor given does not change.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static OrderedSetCursor<T> CursorNext<T>(OrderedSetCursor<T> cursor) => cursor.Next();
 }

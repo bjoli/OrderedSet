@@ -236,8 +236,8 @@ public static class TransientOrderedSetModule
 }
 
 /// <summary>
-///     A position in a walk of a <see cref="TransientOrderedSet{T}" />. The struct enumerator in
-///     a heap cell, for the reason <see cref="OrderedSetCursor{T}" /> is.
+///     A position in a walk of a <see cref="TransientOrderedSet{T}" />: the struct enumerator in
+///     a heap cell, which <see cref="TransientOrderedSetModule.CursorDone{T}" /> advances in place.
 /// </summary>
 public sealed class TransientOrderedSetCursor<T>
 {
