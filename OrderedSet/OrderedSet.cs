@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace OrderedSet;
 
+[NonUserCode]
 public sealed class OrderedSet<T> : BaseOrderedSet<T>, IEquatable<OrderedSet<T>>
 {
     internal OrderedSet(Node<T> root, IComparer<T> comparer, int count) 

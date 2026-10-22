@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace OrderedSet;
 
+[NonUserCode]
 public sealed class OrderedSetBuilder<T>
 {
     private readonly List<T> _items;
@@ -68,7 +69,7 @@ public sealed class OrderedSetBuilder<T>
             array[i] = (_items[i], i);
         }
 
-        Array.Sort(array, (a, b) =>
+        Array.Sort(array, [NonUserCode] (a, b) =>
         {
             int cmp = _comparer.Compare(a.item, b.item);
             if (cmp == 0)

@@ -13,6 +13,7 @@ namespace OrderedSet;
 ///     <c>SetModule</c> already uses. A fold's callback takes the element first and the
 ///     accumulator last, as it does everywhere else in this codebase.
 /// </summary>
+[NonUserCode]
 public static class OrderedSetModule
 {
     // ---------------------------------------------------------
@@ -254,7 +255,7 @@ public static class OrderedSetModule
 
     public static bool Exists<T>(Func<T, bool> predicate, OrderedSet<T> set)
     {
-        return !Iter<T>(k => !predicate(k), set);
+        return !Iter<T>([NonUserCode] (k) => !predicate(k), set);
     }
 
     /// <summary>

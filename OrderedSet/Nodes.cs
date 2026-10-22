@@ -13,6 +13,7 @@ public enum NodeFlags : byte
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
+[NonUserCode]
 public struct NodeHeader
 {
     // 6 Bytes: OwnerId for Copy-on-Write (CoW)
@@ -33,6 +34,7 @@ public struct NodeHeader
 }
 
 [InlineArray(32)]
+[NonUserCode]
 public struct KeyBuffer<T>
 {
     private T _element0;
@@ -41,11 +43,13 @@ public struct KeyBuffer<T>
 // Constraint: Internal Nodes fixed at 32 children.
 // This removes the need for a separate array allocation for children references.
 [InlineArray(32)]
+[NonUserCode]
 public struct NodeBuffer<T>
 {
     private Node<T>? _element0;
 }
 
+[NonUserCode]
 public abstract class Node<T>
 {
     public NodeHeader Header;
@@ -78,6 +82,7 @@ public abstract class Node<T>
     }
 }
 
+[NonUserCode]
 public sealed class LeafNode<T> : Node<T>
 {
     public const int Capacity = 64;
@@ -130,6 +135,7 @@ public sealed class LeafNode<T> : Node<T>
     }
 }
 
+[NonUserCode]
 public class InternalNode<T> : Node<T>
 {
     public const int Capacity = 32;
@@ -173,6 +179,7 @@ public class InternalNode<T> : Node<T>
 }
 
 [StructLayout(LayoutKind.Auto, Pack = 1)]
+[NonUserCode]
 public readonly struct OwnerId(uint id, ushort gen) : IEquatable<OwnerId>
 {
     private const int BatchSize = 100;

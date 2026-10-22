@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace OrderedSet;
 
+[NonUserCode]
 public sealed class TransientOrderedSet<T> : BaseOrderedSet<T>
 {
     // This is mutable, but we treat it as readonly for the ID generation logic usually.

@@ -8,6 +8,7 @@ namespace OrderedSet;
 ///     A builder is the bulk path. It collects into a flat list and sorts it into a B-tree in
 ///     one go, where adding to the set itself pays a copy down the tree per element.
 /// </summary>
+[NonUserCode]
 public static class OrderedSetBuilderModule
 {
     // orderedsetbuilder-empty

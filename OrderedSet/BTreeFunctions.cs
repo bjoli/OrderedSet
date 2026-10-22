@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace OrderedSet
 {
+    [NonUserCode]
     public static class BTreeFunctions
     {
         // ---------------------------------------------------------

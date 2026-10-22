@@ -6,6 +6,7 @@ namespace OrderedSet;
 
 
 
+[NonUserCode]
 public struct BTreeEnumerable<T> : IEnumerable<T>
 {
     private readonly Node<T> _root;
@@ -35,17 +36,20 @@ public struct BTreeEnumerable<T> : IEnumerable<T>
 // all int-indexed data structures (or bit partitioned ones).
 // This should be enough for anyone.
 [InlineArray(16)]
+[NonUserCode]
 internal struct IterNodeBuffer<T>
 {
     private Node<T> _element0;
 }
 
 [InlineArray(16)]
+[NonUserCode]
 internal struct IterIndexBuffer
 {
     private int _element0;
 }
 
+[NonUserCode]
 public struct BTreeEnumerator<T> : IEnumerator<T>
     {
         private readonly IComparer<T> _comparer;

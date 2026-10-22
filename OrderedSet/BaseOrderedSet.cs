@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace OrderedSet;
 
+[NonUserCode]
 public abstract class BaseOrderedSet<T> : IEnumerable<T>
 {
     internal Node<T> Root;

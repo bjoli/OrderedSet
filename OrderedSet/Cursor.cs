@@ -16,6 +16,7 @@ namespace OrderedSet;
 ///     follows the path from the root again. The tree is a few levels deep, and a leaf holds
 ///     many elements, so this costs little for each element.
 /// </summary>
+[NonUserCode]
 public readonly struct OrderedSetCursor<T>
 {
     // The depth of the leaf is in the low bits of the path, and the child index at each
@@ -152,6 +153,7 @@ public readonly struct OrderedSetCursor<T>
     }
 
     [InlineArray(MaxDepth)]
+    [NonUserCode]
     private struct PathNodes
     {
         private Node<T> _element0;

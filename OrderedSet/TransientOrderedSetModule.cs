@@ -13,6 +13,7 @@ namespace OrderedSet;
 ///     transient is a set — it is the *ownership* of the nodes that differs, which is what lets
 ///     an edit skip the copy and what makes <see cref="ToPersistent{T}" /> O(1).
 /// </summary>
+[NonUserCode]
 public static class TransientOrderedSetModule
 {
     // ---------------------------------------------------------
@@ -205,7 +206,7 @@ public static class TransientOrderedSetModule
 
     public static bool Exists<T>(Func<T, bool> predicate, TransientOrderedSet<T> set)
     {
-        return !Iter<T>(k => !predicate(k), set);
+        return !Iter<T>([NonUserCode] (k) => !predicate(k), set);
     }
 
     public static bool TryFindKey<T>(Func<T, bool> predicate, TransientOrderedSet<T> set, [MaybeNullWhen(false)] out T key)
@@ -239,6 +240,7 @@ public static class TransientOrderedSetModule
 ///     A position in a walk of a <see cref="TransientOrderedSet{T}" />: the struct enumerator in
 ///     a heap cell, which <see cref="TransientOrderedSetModule.CursorDone{T}" /> advances in place.
 /// </summary>
+[NonUserCode]
 public sealed class TransientOrderedSetCursor<T>
 {
     public BTreeEnumerator<T> Enumerator;
