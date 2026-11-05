@@ -10,7 +10,16 @@ public abstract class BaseOrderedSet<T> : IEnumerable<T>
     internal Node<T> Root;
     internal readonly IComparer<T> Comparer;
     
-    public int Count { get; protected set; }
+    // -1 until counted: a part made by Split is counted when its count is first asked for,
+    // which is in the part's own fiber rather than in the split. Written at most once by a
+    // reader, with the same value by every thread that writes it, so the race is benign.
+    private int _count;
+
+    public int Count
+    {
+        get => _count >= 0 ? _count : _count = BTreeSplit<T>.CountKeys(Root);
+        protected set => _count = value;
+    }
 
     protected BaseOrderedSet(Node<T> root, IComparer<T> comparer, int count)
     {

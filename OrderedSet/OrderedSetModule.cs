@@ -118,6 +118,9 @@ public static class OrderedSetModule
         return transient.ToPersistent();
     }
 
+    /// <summary>(std parallel)'s chunks: about k sets in order, sharing the nodes.</summary>
+    public static OrderedSet<T>[] Split<T>(OrderedSet<T> set, int k) => set.Split(k);
+
     // ---------------------------------------------------------
     // Set algebra
     //
