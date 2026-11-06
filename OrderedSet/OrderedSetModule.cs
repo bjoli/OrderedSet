@@ -121,6 +121,9 @@ public static class OrderedSetModule
     /// <summary>(std parallel)'s chunks: about k sets in order, sharing the nodes.</summary>
     public static OrderedSet<T>[] Split<T>(OrderedSet<T> set, int k) => set.Split(k);
 
+    /// <summary>(std parallel)'s join: sets in order, in one set. See OrderedSet.Concat.</summary>
+    public static OrderedSet<T> Concat<T>(OrderedSet<T>[] sets) => OrderedSet<T>.Concat(sets);
+
     // ---------------------------------------------------------
     // Set algebra
     //
@@ -409,15 +412,10 @@ public static class OrderedSetModule
         Func<T, bool> predicate,
         OrderedSet<T> set)
     {
-        var builder = new OrderedSetBuilder<T>(set.Count, set.Comparer);
-        foreach (var item in set)
-        {
-            if (predicate(item))
-            {
-                builder.Add(item);
-            }
-        }
-        return builder.Build();
+        // The set itself when every element is kept; see BTreeRebuild.
+        var (root, count) = BTreeRebuild<T>.Filter(set.Root, predicate);
+        if (root == null) return set;
+        return count == 0 ? OrderedSet<T>.Empty(set.Comparer) : new OrderedSet<T>(root, set.Comparer, count);
     }
 
     // orderedset-fold: folder state set

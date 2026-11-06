@@ -71,7 +71,7 @@ internal static class BTreeSplit<T>
     // One tree over nodes of one depth, in order: internal nodes of up to 32 children each, as
     // even as they can be, level by level up to one root.
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private static Node<T> Over(List<Node<T>> nodes)
+    internal static Node<T> Over(List<Node<T>> nodes)
     {
         while (nodes.Count > 1)
         {

@@ -107,6 +107,29 @@ public sealed class OrderedSet<T> : BaseOrderedSet<T>, IEquatable<OrderedSet<T>>
         return parts;
     }
 
+    /// <summary>
+    ///     The elements of <paramref name="sets" /> in one set, under the first set's comparer:
+    ///     what <see cref="Split" /> cut, joined again. Every element of a set must be less than
+    ///     every element of the next. The sets' leaves are kept, under new internal nodes: no
+    ///     element is compared or copied, but for the few leaves that are joined with a small
+    ///     neighbour.
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    ///     When there are no sets, or a set has an element that is not less than every element
+    ///     of the next.
+    /// </exception>
+    public static OrderedSet<T> Concat(OrderedSet<T>[] sets)
+    {
+        if (sets.Length == 0) throw new ArgumentException("Concat needs at least one set.", nameof(sets));
+        if (sets.Length == 1) return sets[0];
+
+        var comparer = sets[0].Comparer;
+        var roots = new Node<T>[sets.Length];
+        for (var i = 0; i < sets.Length; i++) roots[i] = sets[i].Root;
+        var (root, count) = BTreeConcat<T>.Concat(roots, comparer);
+        return count == 0 ? Empty(comparer) : new OrderedSet<T>(root, comparer, count);
+    }
+
     public TransientOrderedSet<T> ToTransient()
     {
         return new TransientOrderedSet<T>(Root, Comparer, Count);
