@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <!-- The assembly, not the namespace: `OrderedSet.OrderedSet<T>` is
+        <!-- The assembly, not the namespace: `OrderedSet.NodeOps` is
              unaffected. Assembly names are matched without regard to case, so
              this and the `(std orderedset)` module's own `orderedset.dll` would
              otherwise be one name to the loader. -->
