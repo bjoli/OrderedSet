@@ -111,6 +111,8 @@ public sealed class LeafNode<T> : Node<T>
         // CASE 1: Persistent Mode (transactionId is None).
         // We MUST create a copy, because we cannot distinguish "Shared Immutable Node (0)"
         // from "New Mutable Node (0)" based on ID alone.
+        // However, since BTreeFunctions only calls this once before descending, 
+        // we won't copy the same fresh node twice.
         if (transactionId == OwnerId.None)
         {
             return new LeafNode<T>(this, OwnerId.None);
@@ -158,6 +160,7 @@ public class InternalNode<T> : Node<T>
         this.Children = original.Children;
     }
 
+    // The missing method needed by BTreeFunctions for routing
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Span<Node<T>> GetChildren() 
     {
